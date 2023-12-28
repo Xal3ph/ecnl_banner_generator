@@ -39,6 +39,9 @@ function save() {
   localStorage.setItem('playerEmail', $('#inputPlayerEmail').val());
   localStorage.setItem('playerInstagram', $('#inputPlayerInstagram').val());
   localStorage.setItem('playerOther1', $('#inputPlayerOther1').val());
+
+  localStorage.setItem('imageBackgroundUrl', $('#inputImageBackgroundUrl').val());
+  localStorage.setItem('imageFloatUrl', $('#inputImageFloatUrl').val());
 }
 
 function loadForm() {
@@ -59,21 +62,51 @@ function loadForm() {
   $('#inputPlayerEmail').val(localStorage.getItem('playerEmail'));
   $('#inputPlayerInstagram').val(localStorage.getItem('playerInstagram'));
   $('#inputPlayerOther1').val(localStorage.getItem('playerOther1'));
+
+  $('#inputImageBackgroundUrl').val(localStorage.getItem('imageBackgroundUrl'));
+  $('#inputImageFloatUrl').val(localStorage.getItem('imageFloatUrl'));
 }
 
 function loadImage(imgNum) {
-  imgNum = imgNum ?? localStorage.getItem('inputImageNumber') ?? getUrlParameter('imageNum')
-  if(imgNum) {
-    $('#main-ig-card').removeClass (function (index, className) {
-      return (className.match (/(^|\s)ig-img-\S+/g) || []).join(' ');
-    }).addClass('ig-img-'+imgNum);
-    try {
-      $('#card-bg-image').attr('src', $('.ig-img-'+imgNum).css('background-image').split('"')[1])
-    }catch(e) {
 
-    }
-    // $('#card-bg-image').attr('src',)
+  let imageBackgroundUrl = localStorage.getItem('imageBackgroundUrl');
+  let imageFloatUrl = localStorage.getItem('imageFloatUrl')
+  // $('#imageBackgroundUrl').html(localStorage.getItem('imageBackgroundUrl'));
+  // $('#imageFloatUrl').html(localStorage.getItem('imageFloatUrl'));
+
+  if(imageFloatUrl) {
+    $('#card-float-image').attr('src', imageFloatUrl);
+    $('#card-float-image').css('display', 'block');
+  } else {
+    $('#card-float-image').css('display', 'none');
   }
+
+  if(imageBackgroundUrl){
+    $('#main-ig-card').css('background-image', `url("${imageBackgroundUrl}")`);
+    $('#card-bg-image').attr('src', imageBackgroundUrl)
+  } else {
+    imgNum = imgNum ?? localStorage.getItem('inputImageNumber') ?? getUrlParameter('imageNum')
+    if(imgNum) {
+      $('#main-ig-card').removeClass (function (index, className) {
+        return (className.match (/(^|\s)ig-img-\S+/g) || []).join(' ');
+      }).addClass('ig-img-'+imgNum);
+      try {
+        const bgImg = $('.ig-img-'+imgNum).css('background-image').split('"')[1]
+        if(bgImg) {
+          $('#card-bg-image').attr('src', bgImg)
+        }
+        else {
+          $('#card-bg-image').css('visibility', 'hidden');
+        }
+      }catch(e) {
+  
+      }
+      // $('#card-bg-image').attr('src',)
+    } else {
+      $('#card-bg-image').css('visibility', 'hidden');
+    }
+  }
+
 
   $('#title').html(localStorage.getItem('inputTitle') || 'title')
   events = JSON.parse(localStorage.getItem('events') ?? '[]');
