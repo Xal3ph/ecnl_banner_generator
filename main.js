@@ -47,7 +47,9 @@ function loadForm() {
   events.forEach(e => {
     addEvent(e.name, e.location, e.dateTime)
   });
-  $('#inputEvents .event').first().remove();
+  if($('#inputEvents .event').length > 1) {
+    $('#inputEvents .event').first().remove();
+  }
 
   $('#inputPlayerName').val(localStorage.getItem('playerName'));
   $('#inputPlayerHeight').val(localStorage.getItem('playerHeight'));
@@ -137,7 +139,7 @@ $(function(){
   $('#btnSave').click(() => {save();});
   $('#btnClear').click(()=>{
     localStorage.clear();
-    loadForm();
+    window.location = window.location.href.split("?")[0];
   });
 
   $('#btnInstagramTall').click(() => {
