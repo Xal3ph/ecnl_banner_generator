@@ -155,3 +155,7 @@
 .text-bg-dark-alpha9 {
   background-color: rgba(var(--bs-dark-rgb), 0.9)
 }
+
+.text-bg-dark-gradient {
+  background: linear-gradient(90deg, rgba(var(--bs-dark-rgb), 0.5) 0 30%, rgba(var(--bs-dark-rgb), 0) 70% 100%);
+}
