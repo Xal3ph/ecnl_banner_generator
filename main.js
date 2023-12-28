@@ -38,6 +38,7 @@ function save() {
   localStorage.setItem('playerGradYear', $('#inputPlayerGradYear').val());
   localStorage.setItem('playerEmail', $('#inputPlayerEmail').val());
   localStorage.setItem('playerInstagram', $('#inputPlayerInstagram').val());
+  localStorage.setItem('playerOther1', $('#inputPlayerOther1').val());
 }
 
 function loadForm() {
@@ -57,6 +58,7 @@ function loadForm() {
   $('#inputPlayerGradYear').val(localStorage.getItem('playerGradYear'));
   $('#inputPlayerEmail').val(localStorage.getItem('playerEmail'));
   $('#inputPlayerInstagram').val(localStorage.getItem('playerInstagram'));
+  $('#inputPlayerOther1').val(localStorage.getItem('playerOther1'));
 }
 
 function loadImage(imgNum) {
@@ -90,6 +92,7 @@ function loadImage(imgNum) {
   $('#playerGradYear').html(localStorage.getItem('playerGradYear'));
   $('#playerEmail').html(localStorage.getItem('playerEmail'));
   $('#playerInstagram').html(localStorage.getItem('playerInstagram'));
+  $('#playerOther1').html(localStorage.getItem('playerOther1'));
 }
 
 function addEvent(inputEventName, inputEventLocation, inputEventDateTime) {
