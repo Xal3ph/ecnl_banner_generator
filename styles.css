@@ -125,3 +125,33 @@
   background-image: url('./images/player/eva12.2023v8.JPG');
   background-position: 95% center;
 }
+
+.badges img {
+  max-height: 70px
+}
+
+.badges-sm img {
+  max-height: 50px
+}
+
+#card-bg-image {
+  width: 100%;
+  max-width: 100vw;
+  max-height: 100vh;
+  object-fit: cover; 
+}
+
+#main-ig-card {
+  max-height: 100vh;
+  padding: 0;
+  margin: 0;
+}
+
+
+.text-bg-dark-alpha7 {
+  background-color: rgba(var(--bs-dark-rgb), 0.7)
+}
+
+.text-bg-dark-alpha9 {
+  background-color: rgba(var(--bs-dark-rgb), 0.9)
+}

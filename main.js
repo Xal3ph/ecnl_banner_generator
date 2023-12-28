@@ -1,6 +1,4 @@
-//
-// Place any custom JS here
-//
+let events = [];
 
 var getUrlParameter = function getUrlParameter(sParam) {
   var sPageURL = window.location.search.substring(1),
@@ -19,58 +17,134 @@ var getUrlParameter = function getUrlParameter(sParam) {
 };
 
 function save() {
-  localStorage.setItem('inputEventName', $('#inputEventName').val())
+  localStorage.setItem('inputTitle', $('#inputTitle').val())
   localStorage.setItem('inputImageNumber', $('#inputImageNumber').val())
-  localStorage.setItem('inputEventLocation1', $('#inputEventLocation1').val())
-  localStorage.setItem('inputEventDateTime1', $('#inputEventDateTime1').val())
-  localStorage.setItem('inputEventLocation2', $('#inputEventLocation2').val())
-  localStorage.setItem('inputEventDateTime2', $('#inputEventDateTime2').val())
-  localStorage.setItem('inputEventLocation3', $('#inputEventLocation3').val())
-  localStorage.setItem('inputEventDateTime3', $('#inputEventDateTime3').val())
-  localStorage.setItem('inputEventLocation4', $('#inputEventLocation4').val())
-  localStorage.setItem('inputEventDateTime4', $('#inputEventDateTime4').val())
+
+  events = []
+  $('.event').each((index, row) => {
+    events.push(
+      {
+        name: $(row).find('.inputEventName').val(),
+        location: $(row).find('.inputEventLocation').val(),
+        dateTime: $(row).find('.inputEventDateTime').val(),
+      }
+    );
+  });
+  localStorage.setItem('events', JSON.stringify(events))
+
+  localStorage.setItem('playerName', $('#inputPlayerName').val());
+  localStorage.setItem('playerHeight', $('#inputPlayerHeight').val());
+  localStorage.setItem('playerPosition', $('#inputPlayerPosition').val());
+  localStorage.setItem('playerGradYear', $('#inputPlayerGradYear').val());
+  localStorage.setItem('playerEmail', $('#inputPlayerEmail').val());
+  localStorage.setItem('playerInstagram', $('#inputPlayerInstagram').val());
 }
 
 function loadForm() {
   $('#inputImageNumber').val(localStorage.getItem('inputImageNumber'))
-  $('#inputEventName').val(localStorage.getItem('inputEventName'))
-  $('#inputEventLocation1').val(localStorage.getItem('inputEventLocation1'))
-  $('#inputEventDateTime1').val(localStorage.getItem('inputEventDateTime1'))
-  $('#inputEventLocation2').val(localStorage.getItem('inputEventLocation2'))
-  $('#inputEventDateTime2').val(localStorage.getItem('inputEventDateTime2'))
-  $('#inputEventLocation3').val(localStorage.getItem('inputEventLocation3'))
-  $('#inputEventDateTime3').val(localStorage.getItem('inputEventDateTime3'))
-  $('#inputEventLocation4').val(localStorage.getItem('inputEventLocation4'))
-  $('#inputEventDateTime4').val(localStorage.getItem('inputEventDateTime4'))
+  $('#inputTitle').val(localStorage.getItem('inputTitle'))
+  events = JSON.parse(localStorage.getItem('events') ?? '[]');
+  events.forEach(e => {
+    addEvent(e.name, e.location, e.dateTime)
+  });
+  $('#inputEvents .event').first().remove();
+
+  $('#inputPlayerName').val(localStorage.getItem('playerName'));
+  $('#inputPlayerHeight').val(localStorage.getItem('playerHeight'));
+  $('#inputPlayerPosition').val(localStorage.getItem('playerPosition'));
+  $('#inputPlayerGradYear').val(localStorage.getItem('playerGradYear'));
+  $('#inputPlayerEmail').val(localStorage.getItem('playerEmail'));
+  $('#inputPlayerInstagram').val(localStorage.getItem('playerInstagram'));
 }
 
-function loadImage() {
-  var imgNum = localStorage.getItem('inputImageNumber') || getUrlParameter('imageNum')
+function loadImage(imgNum) {
+  imgNum = imgNum ?? localStorage.getItem('inputImageNumber') ?? getUrlParameter('imageNum')
   if(imgNum) {
     $('#main-ig-card').removeClass (function (index, className) {
       return (className.match (/(^|\s)ig-img-\S+/g) || []).join(' ');
     }).addClass('ig-img-'+imgNum);
+    try {
+      $('#card-bg-image').attr('src', $('.ig-img-'+imgNum).css('background-image').split('"')[1])
+    }catch(e) {
+
+    }
+    // $('#card-bg-image').attr('src',)
   }
 
-  $('#eventName').html(localStorage.getItem('inputEventName') || 'eventName')
-  $('#eventLocation1').html(localStorage.getItem('inputEventLocation1'))
-  $('#eventDateTime1').html(localStorage.getItem('inputEventDateTime1'))
-  $('#eventLocation2').html(localStorage.getItem('inputEventLocation2'))
-  $('#eventDateTime2').html(localStorage.getItem('inputEventDateTime2'))
-  $('#eventLocation3').html(localStorage.getItem('inputEventLocation3'))
-  $('#eventDateTime3').html(localStorage.getItem('inputEventDateTime3'))
-  $('#eventLocation4').html(localStorage.getItem('inputEventLocation4'))
-  $('#eventDateTime4').html(localStorage.getItem('inputEventDateTime4'))
+  $('#title').html(localStorage.getItem('inputTitle') || 'title')
+  events = JSON.parse(localStorage.getItem('events') ?? '[]');
+  events.forEach(e => {
+    console.log(e)
+    $('#eventDetails .event:last').clone(true).insertAfter('#eventDetails .event:last');
+    $('#eventDetails .event:last .eventName').html(e.name);
+    $('#eventDetails .event:last .eventLocation').html(e.location);
+    $('#eventDetails .event:last .eventDateTime').html(e.dateTime);
+  });
+  $('#eventDetails .event').first().remove();
+
+  $('#playerName').html(localStorage.getItem('playerName'));
+  $('#playerHeight').html(localStorage.getItem('playerHeight'));
+  $('#playerPosition').html(localStorage.getItem('playerPosition'));
+  $('#playerGradYear').html(localStorage.getItem('playerGradYear'));
+  $('#playerEmail').html(localStorage.getItem('playerEmail'));
+  $('#playerInstagram').html(localStorage.getItem('playerInstagram'));
+}
+
+function addEvent(inputEventName, inputEventLocation, inputEventDateTime) {
+  $('#inputEvents .event:last').clone(true).insertAfter('#inputEvents .event:last');
+  $('#inputEvents .event:last .inputEventName').val(inputEventName);
+  $('#inputEvents .event:last .inputEventLocation').val(inputEventLocation);
+  $('#inputEvents .event:last .inputEventDateTime').val(inputEventDateTime);
+}
+
+function removeEvent(e) {
+  if($('.event').length === 1) {
+    $('.event input').val('')
+  }
+  else {
+    $(e.target).closest('.event').remove();
+  }
+}
+
+function loadHash() {
+  const hash = getUrlParameter('hash')
+  if(hash) {
+    const decodedHash = JSON.parse(atob(hash) ?? '{}')
+    Object.entries(decodedHash).forEach(function ([key, value]) {
+      localStorage.setItem(key, value);
+    });
+  }
+}
+
+function getHash() {
+  return btoa(JSON.stringify(localStorage));
 }
 
 $(function(){
 
+  loadHash();
   loadImage();
-  $('#save').click(() => {save();});
   loadForm();
 
-  $('#gotoInstagram').click(() => {
+  $("#addEvent").click(() => {addEvent();});
+  $(".removeEvent").click((e) => {removeEvent(e);});
+
+  $('#btnLink').click(() => {
     save();
-    window.open('./instagram.html', '_blank');
+    window.open(`./?hash=${getHash()}`, '_blank');
+  });
+  $('#btnSave').click(() => {save();});
+  $('#btnClear').click(()=>{
+    localStorage.clear();
+    loadForm();
+  });
+
+  $('#btnInstagramTall').click(() => {
+    save();
+    window.open('./instagram_tall.html', '_blank');
+  })
+  $('#btnInstagramWide').click(() => {
+    save();
+    window.open('./instagram_wide.html', '_blank');
   })
 });
