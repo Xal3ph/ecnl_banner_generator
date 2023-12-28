@@ -132,6 +132,7 @@ $(function(){
   $('#btnLink').click(() => {
     save();
     window.open(`./?hash=${getHash()}`, '_blank');
+    // navigator.clipboard.writeText(copyText.value);
   });
   $('#btnSave').click(() => {save();});
   $('#btnClear').click(()=>{
