@@ -157,5 +157,11 @@
 }
 
 .text-bg-dark-gradient {
-  background: linear-gradient(90deg, rgba(var(--bs-dark-rgb), 0.5) 0 30%, rgba(var(--bs-dark-rgb), 0) 70% 100%);
+  /* background: linear-gradient(90deg, rgba(var(--bs-dark-rgb), 0.5) 0 30%, rgba(var(--bs-dark-rgb), 0) 70% 100%); */
+
+  background: -moz-linear-gradient(left, rgba(var(--bs-dark-rgb), 0.5) 0 50%, rgba(var(--bs-dark-rgb), 0) 70% 100%);
+  background: -webkit-linear-gradient(left, rgba(var(--bs-dark-rgb), 0.5) 0 50%, rgba(var(--bs-dark-rgb), 0) 70% 100%);
+  background: linear-gradient(to right, rgba(var(--bs-dark-rgb), 0.5) 0 50%, rgba(var(--bs-dark-rgb), 0) 70% 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='transparent',GradientType=1 );
+
 }
