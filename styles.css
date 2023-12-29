@@ -89,7 +89,7 @@
 }
 
 .ig-card {
-  height: 100vh;
+  width: 100%;
   /* width: 1080px;
   height: 1920px; */
   /* width: 100%;
@@ -167,12 +167,22 @@
   background-color: rgba(var(--bs-dark-rgb), 0.9)
 }
 
-.text-bg-dark-gradient {
+.text-bg-dark-gradient, .text-bg-dark-gradient-horizontal {
   /* background: linear-gradient(90deg, rgba(var(--bs-dark-rgb), 0.5) 0 30%, rgba(var(--bs-dark-rgb), 0) 70% 100%); */
 
   background: -moz-linear-gradient(left, rgba(var(--bs-dark-rgb), 0.5) 0 50%, rgba(var(--bs-dark-rgb), 0) 70% 100%);
   background: -webkit-linear-gradient(left, rgba(var(--bs-dark-rgb), 0.5) 0 50%, rgba(var(--bs-dark-rgb), 0) 70% 100%);
   background: linear-gradient(to right, rgba(var(--bs-dark-rgb), 0.5) 0 50%, rgba(var(--bs-dark-rgb), 0) 70% 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='transparent',GradientType=1 );
+
+}
+
+.text-bg-dark-gradient-vertical {
+  /* background: linear-gradient(90deg, rgba(var(--bs-dark-rgb), 0.5) 0 30%, rgba(var(--bs-dark-rgb), 0) 70% 100%); */
+
+  background: -moz-linear-gradient(top, rgba(var(--bs-dark-rgb), 0.5) 0 50%, rgba(var(--bs-dark-rgb), 0) 70% 100%);
+  background: -webkit-linear-gradient(top, rgba(var(--bs-dark-rgb), 0.5) 0 50%, rgba(var(--bs-dark-rgb), 0) 70% 100%);
+  background: linear-gradient(to bottom, rgba(var(--bs-dark-rgb), 0.5) 0 50%, rgba(var(--bs-dark-rgb), 0) 70% 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='transparent',GradientType=1 );
 
 }

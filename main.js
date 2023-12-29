@@ -42,6 +42,8 @@ function save() {
 
   localStorage.setItem('imageBackgroundUrl', $('#inputImageBackgroundUrl').val());
   localStorage.setItem('imageFloatUrl', $('#inputImageFloatUrl').val());
+
+  localStorage.setItem('styleAspectRatio', $('#inputStyleAspectRatio').val());
 }
 
 function loadForm() {
@@ -62,9 +64,11 @@ function loadForm() {
   $('#inputPlayerEmail').val(localStorage.getItem('playerEmail'));
   $('#inputPlayerInstagram').val(localStorage.getItem('playerInstagram'));
   $('#inputPlayerOther1').val(localStorage.getItem('playerOther1'));
-
+  
   $('#inputImageBackgroundUrl').val(localStorage.getItem('imageBackgroundUrl'));
   $('#inputImageFloatUrl').val(localStorage.getItem('imageFloatUrl'));
+
+  $('#inputStyleAspectRatio').val(localStorage.getItem('styleAspectRatio'));
 }
 
 function loadImage(imgNum) {
@@ -126,6 +130,8 @@ function loadImage(imgNum) {
   $('#playerEmail').html(localStorage.getItem('playerEmail'));
   $('#playerInstagram').html(localStorage.getItem('playerInstagram'));
   $('#playerOther1').html(localStorage.getItem('playerOther1'));
+
+  $('.ig-card').css('aspect-ratio', localStorage.getItem('styleAspectRatio') ?? 'auto');
 }
 
 function addEvent(inputEventName, inputEventLocation, inputEventDateTime) {
