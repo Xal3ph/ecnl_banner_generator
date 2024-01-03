@@ -192,4 +192,8 @@ $(function(){
     save();
     window.open('./instagram_wide.html', '_blank');
   })
+  $('#btnCanvas').click(() => {
+    save();
+    window.open('./canvas_aspect.html', '_blank');
+  })
 });
