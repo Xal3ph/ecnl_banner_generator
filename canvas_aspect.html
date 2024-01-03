@@ -22,7 +22,10 @@
       });
     }
     async function loadCanvas(canvas) {
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext('2d', {
+        alpha: true,
+        premultipliedAlpha: false
+      });
 
       let imageBackgroundUrl = localStorage.getItem('imageBackgroundUrl');
       let imageFloatUrl = localStorage.getItem('imageFloatUrl')
