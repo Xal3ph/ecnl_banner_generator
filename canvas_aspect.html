@@ -9,13 +9,14 @@
 </head>
 
 <body>
-  <canvas height="1080" width="1080" id="myCanvas"></canvas>
+  <canvas height="1080" width="1080" id="myCanvas" crossorigin="anonymous"></canvas>
   <script src="main.js"></script>
   <script>
     async function loadImage(url) {
       return new Promise((resolve, reject) => {
         img = new Image();
         img.src = url
+        img.crossOrigin="*"
         img.onload = function () {
           resolve(img)
         }
@@ -154,11 +155,26 @@
       ctx.textAlign = 'right'
       ctx.fillStyle = "#ffffff";
       ctx.fillText('VDA 08g ECNL', canvas.width - (marginX * 1.5), canvas.height - footerFontSize);
-      $('.ig-card').css('aspect-ratio', localStorage.getItem('styleAspectRatio') ?? 'auto');
     }
 
     $(function () {
       loadCanvas($('#myCanvas')[0])
+      $('#myCanvas').click(() => {
+        // const canvas = $('#myCanvas')[0]
+        const canvas = document.getElementById("myCanvas")
+        // Convert our canvas to a data URL
+        let canvasUrl = canvas.toDataURL();
+        // Create an anchor, and set the href value to our data URL
+        const createEl = document.createElement('a');
+        createEl.href = canvasUrl;
+
+        // This is the name of our downloaded file
+        createEl.download = localStorage.getItem('playerName') || 'image';
+
+        // Click the download button, causing a download, and then remove it
+        createEl.click();
+        createEl.remove();
+      })
     });
   </script>
 </body>
