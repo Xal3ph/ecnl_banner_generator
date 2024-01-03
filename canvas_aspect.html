@@ -92,25 +92,22 @@
       ctx.fillText(localStorage.getItem('inputTitle') || '', marginX, titleSize + padding);
 
       events = JSON.parse(localStorage.getItem('events') ?? '[]');
-      let eventY = titleSize+20
+      let eventY = titleSize+10
+      eventSize = 32
+      ctx.font = `normal ${eventSize}px Segoe UI, Helvetica Neue, Helvetica, sans-serif`;
+      ctx.fillStyle = "#ffffffaa";
       events.forEach(e => {
-        eventSize = 32
 
         padding = 10
-        eventY+=(eventSize + padding)
-        ctx.font = `lighter ${eventSize}px Segoe UI, Helvetica Neue, Helvetica, sans-serif`;
         ctx.fillStyle = "#ffffff";
+        eventY+=(eventSize + padding + 10)
         ctx.fillText(e.name || '', marginX * 2, eventY + padding);
 
-        eventY+=(eventSize + padding)
-        ctx.font = `lighter ${eventSize}px Segoe UI, Helvetica Neue, Helvetica, sans-serif`;
         ctx.fillStyle = "#ffffffaa";
-        ctx.op
+        eventY+=(eventSize + padding)
         ctx.fillText(e.dateTime || '', marginX * 2, eventY + padding);
 
         // eventY+=(eventSize + padding)
-        ctx.font = `lighter ${eventSize}px Segoe UI, Helvetica Neue, Helvetica, sans-serif`;
-        ctx.fillStyle = "#ffffffaa";
         ctx.fillText(e.location || 'asdf', marginX * 2 + canvas.width/4, eventY + padding);
       });
 
