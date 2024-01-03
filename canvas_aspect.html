@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
+    integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <canvas height="1080" width="1080" id="myCanvas"></canvas>
+  <script src="main.js"></script>
+  <script>
+    async function loadImage(url) {
+      return new Promise((resolve, reject) => {
+        img = new Image();
+        img.src = url
+        img.onload = function () {
+          resolve(img)
+        }
+      });
+    }
+    async function loadCanvas(canvas) {
+      const ctx = canvas.getContext('2d');
+
+      let imageBackgroundUrl = localStorage.getItem('imageBackgroundUrl');
+      let imageFloatUrl = localStorage.getItem('imageFloatUrl')
+      // $('#imageBackgroundUrl').html(localStorage.getItem('imageBackgroundUrl'));
+      // $('#imageFloatUrl').html(localStorage.getItem('imageFloatUrl'));
+
+      if (imageFloatUrl) {
+        $('#card-float-image').attr('src', imageFloatUrl);
+        $('#card-float-image').css('display', 'block');
+      } else {
+        $('#card-float-image').css('display', 'none');
+      }
+
+      if (imageBackgroundUrl) {
+        $('#main-ig-card').css('background-image', `url("${imageBackgroundUrl}")`);
+        $('#card-bg-image').attr('src', imageBackgroundUrl)
+        // img = new Image();
+        // img.src = imageBackgroundUrl;
+        // img.onload = function () {
+        // }
+        img = await loadImage(imageBackgroundUrl)
+        // get the imgRatioType: landscape or portrait
+        const imgRatioType =
+          img.width / img.height >= 1 ? 'landscape' : 'portrait'; // 1 > landscape ; 1 < portrait
+
+        // if image is a portrait, then what's limiting it's sWidth is the img width. Otherwise it'll be the img height
+        const sWidth = imgRatioType === 'portrait' ? img.width : img.height;
+        // if image is a landscape, then what's limiting it's sHeight is the img height. Otherwise it'll be the img width
+        const sHeight = imgRatioType === 'landscape' ? img.height : img.width;
+        // if landscape, the image width is equals to 2 equal sx plus the sWidth. Otherwise, it should be 0.
+        const sx = imgRatioType === 'landscape' ? (img.width - sWidth) / 2 : 0;
+        // if portrait, the image height is equals to 2 equal sy plus the sHeight. Otherwise, it should be 0.
+        const sy = imgRatioType === 'portrait' ? (img.height - sHeight) / 2 : 0;
+
+        // destination canvas should have no space on dx
+        const dx = 0;
+        // neither on dy
+        const dy = 0;
+        // it's dWidth should be equal to the canvas width
+        const dWidth = canvas.width;
+        // and the same applies to dHeight with height
+        const dHeight = canvas.height;
+        // use clearRect for setting pixels in a clear rectangle with defined width and height
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // then draws the image
+        ctx.drawImage(img, sx+250, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+      }
+
+      const grd = ctx.createLinearGradient(0, 0, canvas.width, 0);
+      // grd.addColorStop(0, "rgba(0, 0, 0, 0.7)");
+      grd.addColorStop(0.5, "rgba(0,0,0, 0.4)");
+      grd.addColorStop(0.7, "rgba(0,0,0, 0)");
+
+      ctx.fillStyle = grd;
+      // ctx.filter = "blur(15px)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // ctx.filter = "blur(0)";
+
+      let padding = 5
+      const marginX = 24
+      const titleSize = 80
+      ctx.font = `lighter ${titleSize}px Segoe UI, Helvetica Neue, Helvetica, sans-serif`;
+      ctx.fillStyle = "#ffffff";
+      ctx.fillText(localStorage.getItem('inputTitle') || '', marginX, titleSize + padding);
+
+      events = JSON.parse(localStorage.getItem('events') ?? '[]');
+      let eventY = titleSize+20
+      events.forEach(e => {
+        eventSize = 32
+
+        padding = 10
+        eventY+=(eventSize + padding)
+        ctx.font = `lighter ${eventSize}px Segoe UI, Helvetica Neue, Helvetica, sans-serif`;
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText(e.name || '', marginX * 2, eventY + padding);
+
+        eventY+=(eventSize + padding)
+        ctx.font = `lighter ${eventSize}px Segoe UI, Helvetica Neue, Helvetica, sans-serif`;
+        ctx.fillStyle = "#ffffffaa";
+        ctx.op
+        ctx.fillText(e.dateTime || '', marginX * 2, eventY + padding);
+
+        // eventY+=(eventSize + padding)
+        ctx.font = `lighter ${eventSize}px Segoe UI, Helvetica Neue, Helvetica, sans-serif`;
+        ctx.fillStyle = "#ffffffaa";
+        ctx.fillText(e.location || 'asdf', marginX * 2 + canvas.width/4, eventY + padding);
+      });
+
+
+      const footer = {}
+      footer.y = canvas.height*0.7
+      footer.h = canvas.height*0.3
+      ctx.fillStyle = "rgb(33, 37, 41)";
+      ctx.fillRect(0, footer.y, canvas.width, footer.h);
+
+      playerNameSize = 64
+      ctx.font = `500 ${playerNameSize}px Segoe UI, Helvetica Neue, Helvetica, sans-serif`;
+      ctx.fillStyle = "#ffffff";
+      ctx.fillText(localStorage.getItem('playerName') || '', marginX, footer.y + playerNameSize + padding/2);
+
+      footerFontSize = 32
+      ctx.font = `400 ${footerFontSize}px Segoe UI, Helvetica Neue, Helvetica, sans-serif`
+      ctx.fillStyle = "#ffffffaa";
+
+      footerFontY = footer.y + playerNameSize + padding/2
+      padding = 12
+      ctx.fillText(localStorage.getItem('playerPosition') || '', marginX * 1.5, footerFontY += (footerFontSize + padding));
+      ctx.fillText(`Class of ${localStorage.getItem('playerGradYear') || ''}`, marginX * 1.5, footerFontY += (footerFontSize + padding));
+      ctx.fillText(localStorage.getItem('playerInstagram') || '', marginX * 1.5, footerFontY += (footerFontSize + padding));
+      ctx.fillText(localStorage.getItem('playerEmail') || '', marginX * 1.5, footerFontY += (footerFontSize + padding));
+      ctx.fillText(localStorage.getItem('playerOther1') || '', marginX * 1.5, footerFontY += (footerFontSize + padding));
+
+
+      function getBadgeWidth(badgeSize, image) {
+        return (badgeSize/image.height) * image.width
+      }
+      const badgeSize = 150
+      const badge1 = await loadImage("./images/ECNL Girls Badge.svg")
+      const badge2 = await loadImage("./images/New-VDA-2019+Logo-1920w-slim.png")
+      console.log(badge1.width)
+      console.log(badge1.height)
+      x = canvas.width - (getBadgeWidth(badgeSize, badge1) + getBadgeWidth(badgeSize, badge2)) - 15 *2;
+      y = footer.y + (footer.h/2 - badgeSize/2)
+      ctx.drawImage(badge1, x, y, getBadgeWidth(badgeSize, badge1), badgeSize)
+      ctx.drawImage(badge2, x + getBadgeWidth(badgeSize, badge1) + 15, y, getBadgeWidth(badgeSize, badge2), badgeSize)
+
+
+      footerFontY = footer.y + badgeSize + padding*6
+      ctx.textAlign = 'right'
+      ctx.fillStyle = "#ffffff";
+      ctx.fillText('VDA 08g ECNL', canvas.width - (marginX * 1.5), canvas.height - footerFontSize);
+      $('.ig-card').css('aspect-ratio', localStorage.getItem('styleAspectRatio') ?? 'auto');
+    }
+
+    $(function () {
+      loadCanvas($('#myCanvas')[0])
+    });
+  </script>
+</body>
+
+</html>
