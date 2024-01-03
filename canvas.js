@@ -148,7 +148,7 @@ function getEventsGroup(x, y, width, height) {
       x: margin,
       fontSize: 32,
       fontFamily,
-      fontStyle: 'lighter',
+      fontStyle: 'normal',
       fill: '#fff',
       width,
       padding: 3,
