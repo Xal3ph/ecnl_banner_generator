@@ -148,7 +148,7 @@ function getEventsGroup(x, y, width, height) {
       x: margin,
       fontSize: 32,
       fontFamily,
-      fontStyle: 'normal',
+      fontStyle: '500',
       fill: '#fff',
       width,
       padding: 3,
@@ -191,7 +191,7 @@ async function loadCanvas(stage) {
       height: background.height(),
       fillLinearGradientStartPoint: { x: 0, y: 0 },
       fillLinearGradientEndPoint: { x: 1080, y: 0 },
-      fillLinearGradientColorStops: [0.3, 'rgba(0,0,0,0.5)', 0.7, 'rgba(0,0,0,0)'],
+      fillLinearGradientColorStops: [0.3, 'rgba(0,0,0,0.7)', 0.7, 'rgba(0,0,0,0)'],
       stroke: 'black',
       strokeWidth: 4,
     });
