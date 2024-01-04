@@ -25,6 +25,7 @@ function save() {
     events.push(
       {
         name: $(row).find('.inputEventName').val(),
+        image: $(row).find('.inputEventImage').val(),
         location: $(row).find('.inputEventLocation').val(),
         dateTime: $(row).find('.inputEventDateTime').val(),
       }
@@ -51,7 +52,7 @@ function loadForm() {
   $('#inputTitle').val(localStorage.getItem('inputTitle'))
   events = JSON.parse(localStorage.getItem('events') ?? '[]');
   events.forEach(e => {
-    addEvent(e.name, e.location, e.dateTime)
+    addEvent(e.name, e.image, e.location, e.dateTime)
   });
   if($('#inputEvents .event').length > 1) {
     $('#inputEvents .event').first().remove();
@@ -134,9 +135,10 @@ function loadImage(imgNum) {
   $('.ig-card').css('aspect-ratio', localStorage.getItem('styleAspectRatio') ?? 'auto');
 }
 
-function addEvent(inputEventName, inputEventLocation, inputEventDateTime) {
+function addEvent(inputEventName, inputEventImage, inputEventLocation, inputEventDateTime) {
   $('#inputEvents .event:last').clone(true).insertAfter('#inputEvents .event:last');
   $('#inputEvents .event:last .inputEventName').val(inputEventName);
+  $('#inputEvents .event:last .inputEventImage').val(inputEventImage);
   $('#inputEvents .event:last .inputEventLocation').val(inputEventLocation);
   $('#inputEvents .event:last .inputEventDateTime').val(inputEventDateTime);
 }

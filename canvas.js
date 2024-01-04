@@ -1,9 +1,9 @@
 const fontFamily = 'Segoe UI, Helvetica Neue, Helvetica, sans-serif'
-async function loadImage(url) {
+async function loadImageAsync(url) {
   return new Promise((resolve, reject) => {
     img = new Image();
-    img.src = url
     img.crossOrigin = "anonymous"
+    img.src = url
     img.onload = function () {
       resolve(img)
     }
@@ -31,6 +31,20 @@ function getTitleGroup(x, y, width, height) {
   return titleGroup;
 }
 
+
+async function getBadge(url, badgeSize) {
+  const img = await loadImageAsync(url)
+  return { img, badge: new Konva.Image({
+      image: img,
+      width: getBadgeWidth(badgeSize, img),
+      height: badgeSize,
+  })}
+}
+
+function getBadgeWidth(badgeSize, image) {
+  return (badgeSize / image.height) * image.width
+}
+
 async function getFooterGroup(x, y, width, height) {
   var footerGroup = new Konva.Group()
   var footerBG = new Konva.Group({x, y, width, height})
@@ -42,8 +56,8 @@ async function getFooterGroup(x, y, width, height) {
   var footerLeft = new Konva.Group({width, height})
   footerLeft.add(new Konva.Text({
     id: "playerName",
-    x: 10,
-    y: 10,
+    x: 20,
+    y: 20,
     fontSize: 56,
     fontFamily,
     fill: '#fff',
@@ -58,13 +72,13 @@ async function getFooterGroup(x, y, width, height) {
     return v.join(`\n`).replace(`\n\n`,`\n`)
   }
   footerLeft.add(new Konva.Text({
-    x: 20,
-    y: 56+10,
+    x: 30,
+    y: 56+20,
     fontSize: 24,
     fontFamily,
     fill: '#aaa',
     lineHeight: 1.2,
-    fontStyle: 200,
+    fontStyle: 400,
     text: toFooterString(
       localStorage.getItem('playerPosition'),
       localStorage.getItem('playerGradYear'),
@@ -76,12 +90,11 @@ async function getFooterGroup(x, y, width, height) {
   footerBG.add(footerLeft)
 
   var footerRight = new Konva.Group({width, height, align: 'right'})
-  function getBadgeWidth(badgeSize, image) {
-    return (badgeSize / image.height) * image.width
-  }
+
   const badgeSize = 120
-  const badge1 = await loadImage("./images/ECNL Girls Badge.svg")
-  const badge2 = await loadImage("./images/New-VDA-2019+Logo-1920w-slim.png")
+
+  const badge1 = await loadImageAsync("./images/ECNL Girls Badge.svg")
+  const badge2 = await loadImageAsync("./images/New-VDA-2019+Logo-1920w-slim.png")
   x = width - (getBadgeWidth(badgeSize, badge1) + getBadgeWidth(badgeSize, badge2)) - 15 * 2;
   y = (height / 2 - badgeSize / 2)
   const badge1Image = new Konva.Image({
@@ -131,12 +144,12 @@ async function getFooterGroup(x, y, width, height) {
   return footerGroup
 }
 
-function getEventsGroup(x, y, width, height) {
+async function getEventsGroup(x, y, width, height) {
   const eventsGroup = new Konva.Group({x, y, draggable: true})
 
   const events = JSON.parse(localStorage.getItem('events') ?? '[]');
   let eY = 0
-  events.forEach((e) => {
+  for (e of events) {
     const margin = 10
     const eventGroup = new Konva.Group({y: eY})
     const rect = new Konva.Rect({
@@ -144,21 +157,33 @@ function getEventsGroup(x, y, width, height) {
       height: eventGroup.height(),
     });
     eventGroup.add(rect)
+    let imgWidth = 0
+    if(e.image) {
+      imgWidth = 50
+      const {img, badge} = await getBadge(e.image, imgWidth)
+      badge.setAttrs({
+        x: margin,
+        y: margin + 3
+      })
+      eventGroup.add(badge)
+    }
+
     const props = {
-      x: margin,
+      x: margin + imgWidth + 10,
       fontSize: 32,
       fontFamily,
-      fontStyle: '500',
+      fontStyle: 400,
       fill: '#fff',
       width,
       padding: 3,
       align: 'left',
     }
+
     const name = new Konva.Text({...props, y: margin, text: e.name,})
     eventGroup.add(name)
     eY += name.height() + margin
 
-    const col1Width = 240
+    const col1Width = 300
     const dateTime = new Konva.Text({...props, fill: '#aaa', width: col1Width, y: margin + name.height(), text: e.dateTime})
     eventGroup.add(dateTime)
     const location = new Konva.Text({...props, fill: '#aaa', width: width-col1Width, x: col1Width+margin, y: margin + name.height(), text: e.location})
@@ -169,7 +194,7 @@ function getEventsGroup(x, y, width, height) {
 
 
     eventsGroup.add(eventGroup)
-  })
+  }
 
   return eventsGroup;
 
@@ -217,8 +242,8 @@ async function loadCanvas(stage) {
   hudLayer.add(titleLayer);
   const title = titleLayer.find('#title')[0]
 
-  hudLayer.add(getEventsGroup(20, title.getAbsolutePosition().y + title.height(), stage.width(), stage.height()))
-  hudLayer.add(await getFooterGroup(0, stage.height() - stage.height()/5, stage.width(), stage.height()/5))
+  hudLayer.add(await getEventsGroup(20, title.getAbsolutePosition().y + title.height(), stage.width(), stage.height()))
+  hudLayer.add(await getFooterGroup(0, stage.height() - 240, stage.width(), 240))
 
   stage.add(hudLayer)
 
