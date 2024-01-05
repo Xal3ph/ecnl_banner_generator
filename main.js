@@ -50,6 +50,7 @@ function save() {
 function loadForm() {
   $('#inputImageNumber').val(localStorage.getItem('inputImageNumber'))
   $('#inputTitle').val(localStorage.getItem('inputTitle'))
+
   events = JSON.parse(localStorage.getItem('events') ?? '[]');
   events.forEach(e => {
     addEvent(e.name, e.image, e.location, e.dateTime)
@@ -137,8 +138,13 @@ function loadImage(imgNum) {
 
 function addEvent(inputEventName, inputEventImage, inputEventLocation, inputEventDateTime) {
   $('#inputEvents .event:last').clone(true).insertAfter('#inputEvents .event:last');
+
+  $('#inputEvents .event:last .inputEventImage').on('change', function(){
+    $(this).siblings('.inputEventImageImg').attr('src', $(this).val())
+  });
+
   $('#inputEvents .event:last .inputEventName').val(inputEventName);
-  $('#inputEvents .event:last .inputEventImage').val(inputEventImage);
+  $('#inputEvents .event:last .inputEventImage').val(inputEventImage).trigger('change');
   $('#inputEvents .event:last .inputEventLocation').val(inputEventLocation);
   $('#inputEvents .event:last .inputEventDateTime').val(inputEventDateTime);
 }

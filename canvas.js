@@ -1,11 +1,26 @@
 const fontFamily = 'Segoe UI, Helvetica Neue, Helvetica, sans-serif'
 async function loadImageAsync(url) {
   return new Promise((resolve, reject) => {
-    img = new Image();
-    img.crossOrigin = "anonymous"
-    img.src = url
-    img.onload = function () {
-      resolve(img)
+    try{
+      let img = document.querySelector(`[src="${url}"]`);
+      if(img) {
+        img.onerror = () => { reject() }
+        if(!img.complete) {
+          img.onload = () => { resolve(img) }
+        } else {
+          resolve(img)
+        }
+      }
+      if(img === null) {
+        img = new Image();
+        img.crossOrigin = "anonymous"
+        img.src = url
+        img.onload = () => { resolve(img) }
+        img.onerror = () => { reject() }
+      }
+    } catch(e) {
+      console.log(e)
+      reject(e)
     }
   });
 }
@@ -144,7 +159,7 @@ async function getFooterGroup(x, y, width, height) {
   return footerGroup
 }
 
-async function getEventsGroup(x, y, width, height) {
+async function getEventsGroup(x, y, width, height, displayType = 'below') {
   const eventsGroup = new Konva.Group({x, y, draggable: true})
 
   const events = JSON.parse(localStorage.getItem('events') ?? '[]');
@@ -159,13 +174,20 @@ async function getEventsGroup(x, y, width, height) {
     eventGroup.add(rect)
     let imgWidth = 0
     if(e.image) {
-      imgWidth = 50
-      const {img, badge} = await getBadge(e.image, imgWidth)
-      badge.setAttrs({
-        x: margin,
-        y: margin + 3
-      })
-      eventGroup.add(badge)
+      try {
+        imgWidth = (displayType === 'inline') ? 70 : 100
+        const {img, badge} = await getBadge(e.image, imgWidth)
+        actualWidth = getBadgeWidth(imgWidth, img)
+        imgWidth = 130
+        badge.setAttrs({
+          x: margin + (imgWidth - actualWidth)/2,
+          y: margin + 3
+        })
+        eventGroup.add(badge)
+      } catch(e) {
+        imgWidth = 0
+        console.log(e)
+      }
     }
 
     const props = {
@@ -186,7 +208,15 @@ async function getEventsGroup(x, y, width, height) {
     const col1Width = 300
     const dateTime = new Konva.Text({...props, fill: '#aaa', width: col1Width, y: margin + name.height(), text: e.dateTime})
     eventGroup.add(dateTime)
-    const location = new Konva.Text({...props, fill: '#aaa', width: width-col1Width, x: col1Width+margin, y: margin + name.height(), text: e.location})
+
+    const location = new Konva.Text()
+    if(displayType === 'inline') {
+      location.setAttrs({...props, fill: '#aaa', width: width-col1Width, x: col1Width+margin, y: margin + name.height(), text: e.location})
+    } else {
+      eY += dateTime.height() + margin
+      location.setAttrs({...props, fill: '#aaa', y: margin + name.height() + dateTime.height(), text: e.location})
+    }
+
     eventGroup.add(location)
     eY += Math.max(dateTime.height(), location.height()) + margin
 
@@ -217,8 +247,8 @@ async function loadCanvas(stage) {
       fillLinearGradientStartPoint: { x: 0, y: 0 },
       fillLinearGradientEndPoint: { x: 1080, y: 0 },
       fillLinearGradientColorStops: [0.3, 'rgba(0,0,0,0.7)', 0.7, 'rgba(0,0,0,0)'],
-      stroke: 'black',
-      strokeWidth: 4,
+      // stroke: 'black',
+      // strokeWidth: 4,
     });
     background.add(rect1);
     background.dragBoundFunc(function(pos) {
@@ -275,13 +305,6 @@ $(function () {
     height: (aspectRatio === '1') ? 1080 : 1920
   });
 
-  loadCanvas(stage)
-  document.getElementById('btnSave').addEventListener('click', () => {
-    stage.destroyChildren();
-    // reloadValues(stage)
-    stage.setHeight((aspectRatio === '1') ? 1080 : 1920)
-    loadCanvas(stage)
-  })
   document.getElementById('download').addEventListener(
     'click',
     function () {
@@ -290,4 +313,12 @@ $(function () {
     },
     false
   );
+  loadCanvas(stage)
+  document.getElementById('btnSave').addEventListener('click', () => {
+    stage.destroyChildren();
+    // reloadValues(stage)
+    stage.setHeight((aspectRatio === '1') ? 1080 : 1920)
+    loadCanvas(stage)
+  })
+
 });

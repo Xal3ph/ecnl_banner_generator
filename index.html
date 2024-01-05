@@ -3,14 +3,27 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
+    <title>Event Promotion Image Generator</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="styles.css">
     <script src="https://unpkg.com/konva@9/konva.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
   </head>
-  <body>
+    <header class="p-3 text-bg-dark">
+      <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+            <li><a href="./" class="nav-link px-2 text-secondary">Home</a></li>
+            <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
+            <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
+            <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
+            <li><a href="#" class="nav-link px-2 text-white">About</a></li>
+          </ul>
+  
+        </div>
+      </div>
+    </header>
 
     <div class="py-2 container">
     
@@ -30,20 +43,25 @@
         <div class="form-group rounded-2 text-bg-light p-2 my-2">
           <div class="label">Events</div>
           <div id="inputEvents">
-            <div class="row event my-2">
-              <div class="col">
+            <div class="row event my-2 pb-5 pb-sm-2">
+              <div class="col-sm-6 col-md-auto">
                 <input type="text" class="form-control inputEventName" placeholder="Event Name (Optional)">
               </div>
-              <div class="col">
-                <input type="text" class="form-control inputEventImage" placeholder="Event Image (Optional)">
+              <div class="col-sm-6 col-md-auto">
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control inputEventImage" placeholder="Event Image (Optional)">
+                  <!-- <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2"> -->
+                  <img class="inputEventImageImg" style="height: 35px; width: auto; position: absolute; right: 0; opacity: 0.5;"/>
+                  <!-- <img class="inputEventImageImg"/> -->
+                </div>
               </div>
-              <div class="col">
+              <div class="col-sm-6 col-md-auto">
                 <input type="text" class="form-control inputEventLocation" placeholder="Event Location">
               </div>
-              <div class="col">
+              <div class="col-sm-6 col-md-auto">
                 <input type="text" class="form-control inputEventDateTime" placeholder="Event DateTime">
               </div>
-              <div class="col-auto">
+              <div class="col-sm-6 col-md-auto text-end">
                 <a class="removeEvent text-danger"><i class="bi bi-trash"></i></a>
               </div>
             </div>
@@ -62,30 +80,30 @@
             </div>
           </div>
           <div class="row my-2">
-            <div class="col">
+            <div class="col-3 col-sm-auto">
               <input type="text" class="form-control" id="inputPlayerHeight" placeholder="Height">
             </div>
-            <div class="col">
+            <div class="col-12 col-sm-auto">
               <input type="text" class="form-control" id="inputPlayerPosition" placeholder="Position">
             </div>
-            <div class="col">
+            <div class="col-12 col-sm-auto">
               <input type="text" class="form-control" id="inputPlayerGradYear" placeholder="Graduation Year">
             </div>
           </div>
           <div class="row my-2">
-            <div class="col">
+            <div class="col-12 col-sm-auto">
               <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="inputPlayerEmail" placeholder="Email">
                 <label for="inputPlayerEmail">Email</label>
               </div>
             </div>
-            <div class="col">
+            <div class="col-12 col-sm-auto">
               <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="inputPlayerInstagram" placeholder="Instagram">
                 <label for="inputPlayerInstagram">Instagram</label>
               </div>
             </div>
-            <div class="col">
+            <div class="col-12 col-sm-auto">
               <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="inputPlayerOther1" placeholder="Other1">
                 <label for="inputPlayerOther1">Other Text</label>
@@ -125,8 +143,10 @@
       </div>
 
       <button type="button" class="btn btn-outline-primary" id="download">download</button>
-      <div style="scale: 0.5; transform-origin: 0% 0%;">
-        <div id="container"></div>
+      <div>
+        <div style="scale: 0.35; transform-origin: 0% 0%;">
+          <div id="container"></div>
+        </div>
       </div>
     </div>
 
